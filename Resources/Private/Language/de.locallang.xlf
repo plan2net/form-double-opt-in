@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file target-language="de" datatype="plaintext" original="messages" product-name="form_double_opt_in">
+        <header/>
+        <body>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin">
+                <target>Formular Double Opt-in</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.email">
+                <target>E-Mail Adresse</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.mailing_date">
+                <target>Sendungsdatum</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmed">
+                <target>Bestätigt</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_hash">
+                <target>Bestätigungs-Hash</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date">
+                <target>Bestätigungsdatum (wenn bestätigt)</target>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.form_values">
+                <target>Übermittelte Formular-Daten</target>
+            </trans-unit>
+            <trans-unit id="plugin.doubleoptin">
+                <target>Formular Double Opt-in</target>
+            </trans-unit>
+            <trans-unit id="success">
+                <target>Die Bestätigung war erfolgreich.</target>
+            </trans-unit>
+            <trans-unit id="alreadyConfirmed">
+                <target>Sie haben die Bestätigung bereits erfolgreich durchgeführt.</target>
+            </trans-unit>
+            <trans-unit id="failed">
+                <target>Leider war die Bestätigung nicht erfolgreich. Überprüfen Sie den Link noch einmal.</target>
+            </trans-unit>
+            <trans-unit id="email.greeting">
+                <target>Guten Tag</target>
+            </trans-unit>
+            <trans-unit id="email.text">
+                <target>Vielen Dank für Ihre Anmeldung! Bitte bestätigen Sie Ihre E-Mail Adresse, indem Sie dem unten angeführten Link folgen:</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

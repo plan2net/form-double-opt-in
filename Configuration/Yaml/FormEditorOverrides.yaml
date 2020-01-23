@@ -1,0 +1,105 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formElementsDefinition:
+            Form:
+              formEditor:
+                editors:
+                  900:
+                    selectOptions:
+                      250:
+                        value: 'DoubleOptIn'
+                        label: 'Double Opt-In'
+                propertyCollections:
+                  finishers:
+                    250:
+                      __inheritances:
+                        10: 'TYPO3.CMS.Form.mixins.formElementMixins.formEmailFinisherMixin'
+                      identifier: 'DoubleOptIn'
+                      editors:
+                        __inheritances:
+                          10: 'TYPO3.CMS.Form.mixins.formElementMixins.BaseCollectionEditorsMixin'
+                        100:
+                          label: 'Double Opt-In'
+                        110:
+                          identifier: 'firstName'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'First name'
+                          propertyPath: 'options.firstName'
+                          enableFormelementSelectionButton: true
+                          propertyValidators:
+                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
+                        120:
+                          identifier: 'lastName'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Last name'
+                          propertyPath: 'options.lastName'
+                          enableFormelementSelectionButton: true
+                          propertyValidators:
+                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
+                        130:
+                          identifier: 'email'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Email address'
+                          propertyPath: 'options.email'
+                          enableFormelementSelectionButton: true
+                          propertyValidators:
+                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
+                        160:
+                          identifier: 'confirmationPid'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Confirmation page ID'
+                          propertyPath: 'options.confirmationPid'
+                          propertyValidators:
+                            10: 'Integer'
+          finishersDefinition:
+            DoubleOptIn:
+              __inheritances:
+                10: 'TYPO3.CMS.Form.mixins.finishersEmailMixin'
+              implementationClassName: 'Plan2net\FormDoubleOptIn\Form\Finishers\DoubleOptInFormFinisher'
+              options:
+                templateName: DoubleOptIn
+                templateRootPaths:
+                  10: 'EXT:form_double_opt_in/Resources/Private/Templates'
+              formEditor:
+                iconIdentifier: 't3-form-icon-finisher'
+                label: 'Double Opt-In'
+                predefinedDefaults:
+                  options:
+                    firstName: ''
+                    lastName: ''
+                    email: ''
+                    confirmationPid: ''
+                    subject: ''
+                    recipientAddress: ''
+                    recipientName: ''
+                    senderAddress: ''
+                    senderName: ''
+                    replyToAddress: ''
+                    carbonCopyAddress: ''
+                    blindCarbonCopyAddress: ''
+                    format: 'plaintext'
+                    attachUploads: false
+                    translation:
+                      language: ''
+              FormEngine:
+                label: 'Double Opt-In'
+                elements:
+                  firstName:
+                    label: 'First name'
+                    config:
+                      type: 'input'
+                  lastName:
+                    label: 'Last name'
+                    config:
+                      type: 'input'
+                  email:
+                    label: 'E-Mail address'
+                    config:
+                      type: 'input'
+                  confirmationPid:
+                    label: 'Confirmation page ID'
+                    config:
+                      type: 'input'

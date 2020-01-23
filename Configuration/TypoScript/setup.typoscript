@@ -1,0 +1,21 @@
+module.tx_form {
+    settings {
+        yamlConfigurations {
+            505 = EXT:form_double_opt_in/Configuration/Yaml/FormEditorOverrides.yaml
+        }
+    }
+}
+
+plugin.tx_form {
+    settings {
+        doubleOptIn {
+            secretKey = {$plugin.tx_form.doubleOptIn.secretKey}
+        }
+        yamlConfigurations {
+            # required for formEmailFinisherMixin
+            30 = EXT:form/Configuration/Yaml/FormEditorSetup.yaml
+            505 = EXT:form_double_opt_in/Configuration/Yaml/FormEditorOverrides.yaml
+        }
+    }
+}
+

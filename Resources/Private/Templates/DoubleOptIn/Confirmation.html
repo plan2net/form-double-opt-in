@@ -1,0 +1,22 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:if condition="{confirmed} && {alreadyConfirmed}">
+    <f:then>
+        <p>
+            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:alreadyConfirmed"/>
+        </p>
+    </f:then>
+    <f:else if="{confirmed}">
+        <p>
+            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:success"/>
+        </p>
+    </f:else>
+    <f:else>
+        <p>
+            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:failed"/>
+        </p>
+    </f:else>
+</f:if>
+
+</html>

@@ -1,0 +1,4 @@
+plugin.tx_form.doubleOptIn {
+    secretKey =
+    secretKey := getEnv(TYPO3_DEFUSE_KEY)
+}

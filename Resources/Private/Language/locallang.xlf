@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" product-name="form_double_opt_in">
+        <header/>
+        <body>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin">
+                <source>Form double opt-in</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.email">
+                <source>E-Mail address</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.mailing_date">
+                <source>Mailing date</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmed">
+                <source>Confirmed</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_hash">
+                <source>Confirmation hash</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date">
+                <source>Confirmation date (if confirmed)</source>
+            </trans-unit>
+            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.form_values">
+                <source>Submitted form values</source>
+            </trans-unit>
+            <trans-unit id="plugin.doubleoptin">
+                <source>Form double opt-in</source>
+            </trans-unit>
+            <trans-unit id="success">
+                <source>The confirmation was sucessful.</source>
+            </trans-unit>
+            <trans-unit id="alreadyConfirmed">
+                <source>You have already carried out the confirmation sucessfully.</source>
+            </trans-unit>
+            <trans-unit id="failed">
+                <source>Sorry, the confirmation failed. Check the link again.</source>
+            </trans-unit>
+            <trans-unit id="email.greeting">
+                <source>Hello</source>
+            </trans-unit>
+            <trans-unit id="email.text">
+                <source>Thank you for signing up! Please confirm your E-Mail address by following the link below:</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

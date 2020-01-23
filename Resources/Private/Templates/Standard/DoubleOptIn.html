@@ -1,0 +1,25 @@
+<p>
+    <f:if condition="{data.lastName} || {data.firstName}">
+        <f:then>
+            <f:translate key="email.greeting" extensionName="form_double_opt_in"/>
+            {data.firstName} {data.lastName},
+        </f:then>
+        <f:else>
+            <f:translate key="email.greeting" extensionName="form_double_opt_in"/>
+            ,
+        </f:else>
+    </f:if>
+</p>
+<p>
+    <f:translate key="email.text" extensionName="form_double_opt_in"/>
+    <f:link.action pageUid="{confirmationPid}"
+                   extensionName="formdoubleoptin"
+                   pluginName="doubleoptin"
+                   controller="DoubleOptIn"
+                   action="confirmation"
+                   absolute="1"
+                   arguments="{hash: confirmationHash}">
+        {f:uri.action(pageUid: confirmationPid, extensionName: 'formdoubleoptin', pluginName: 'doubleoptin', controller:
+        'DoubleOptIn', action: 'confirmation', absolute: 1, arguments: {hash: confirmationHash}) -> f:format.raw()}
+    </f:link.action>
+</p>
