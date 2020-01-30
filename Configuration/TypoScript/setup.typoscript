@@ -8,9 +8,6 @@ module.tx_form {
 
 plugin.tx_form {
     settings {
-        doubleOptIn {
-            secretKey = {$plugin.tx_form.doubleOptIn.secretKey}
-        }
         yamlConfigurations {
             # required for formEmailFinisherMixin
             30 = EXT:form/Configuration/Yaml/FormEditorSetup.yaml

@@ -151,7 +151,7 @@ class FormDoubleOptIn extends AbstractEntity
      */
     public function getFormValues(): array
     {
-        return json_decode(Encryption::decrypt($this->formValues), true);
+        return json_decode($this->formValues, true);
     }
 
     /**
@@ -160,7 +160,7 @@ class FormDoubleOptIn extends AbstractEntity
      */
     public function setFormValues(array $values): self
     {
-        $this->formValues = Encryption::encrypt(json_encode($values));
+        $this->formValues = json_encode($values);
 
         return $this;
     }

@@ -3,10 +3,8 @@
   "description": "Form double opt-in",
   "require": {
     "php": ">=7.2",
-    "typo3/cms-form": "^9.5",
-    "defuse/php-encryption": "^2.2"
+    "typo3/cms-form": "^9.5"
   },
-  "version": "1.0.0",
   "type": "typo3-cms-extension",
   "autoload": {
     "psr-4": {

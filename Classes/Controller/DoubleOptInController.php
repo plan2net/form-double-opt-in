@@ -7,10 +7,13 @@ use DateTime;
 use Exception;
 use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
 use Plan2net\FormDoubleOptIn\Domain\Repository\FormDoubleOptInRepository;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Form\Service\TranslationService;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -19,8 +22,10 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
  * @package Plan2net\FormDoubleOptIn\Controller
  * @author Wolfgang Klinger <wk@plan2.net>
  */
-class DoubleOptInController extends ActionController
+class DoubleOptInController extends ActionController implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public const SIGNAL_AFTER_OPT_IN_CONFIRMATION = 'afterOptInConfirmation';
 
     /**
@@ -58,15 +63,27 @@ class DoubleOptInController extends ActionController
             $doubleOptIn = $this->doubleOptInRepository->findOneByConfirmationHash($hash);
             // Matching record found
             if ($doubleOptIn) {
-                if (!$doubleOptIn->isConfirmed()) {
-                    $this->confirmDoubleOptIn($doubleOptIn);
-                    $this->dispatchSignal($doubleOptIn);
-                } else {
-                    $this->view->assign('alreadyConfirmed', true);
-                    $this->view->assign('confirmationDate', $doubleOptIn->getConfirmationDate());
-                }
+                try {
+                    if (!$doubleOptIn->isConfirmed()) {
+                        $this->confirmDoubleOptIn($doubleOptIn);
+                        $this->dispatchSignal($doubleOptIn);
+                    } else {
+                        $this->view->assign('alreadyConfirmed', true);
+                        $this->view->assign('confirmationDate', $doubleOptIn->getConfirmationDate());
+                    }
+                    $confirmed = true;
+                } catch (Exception $e) {
+                    $doubleOptIn->setConfirmed(false);
+                    $doubleOptIn->setConfirmationDate(0);
+                    $this->doubleOptInRepository->update($doubleOptIn);
 
-                $confirmed = true;
+                    $this->view->assign('error', $this->handleError(
+                        $e->getMessage(),
+                        TranslationService::getInstance()
+                            ->translate('EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:internalError'),
+                        [__CLASS__, __METHOD__, __LINE__]
+                    ));
+                }
             }
         }
 
@@ -115,5 +132,18 @@ class DoubleOptInController extends ActionController
     protected static function getTypoScriptFrontendController(): TypoScriptFrontendController
     {
         return $GLOBALS['TSFE'];
+    }
+
+    /**
+     * @param string $error
+     * @param string $message
+     * @param array $context
+     * @return string
+     */
+    protected function handleError(string $error, string $message, array $context): string
+    {
+        $this->logger->error($error, $context);
+
+        return $message;
     }
 }

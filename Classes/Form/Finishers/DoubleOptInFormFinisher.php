@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Plan2net\FormDoubleOptIn\Form\Finishers;
 
+use DateTimeInterface;
 use Exception;
 use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
 use Plan2net\FormDoubleOptIn\Domain\Repository\FormDoubleOptInRepository;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -15,6 +18,7 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Form\Domain\Finishers\EmailFinisher;
 use TYPO3\CMS\Form\Domain\Finishers\Exception\FinisherException;
 use TYPO3\CMS\Form\Domain\Model\FormElements\FormElementInterface;
+use TYPO3\CMS\Form\Service\TranslationService;
 
 /**
  * Class DoubleOptInFormFinisher
@@ -22,8 +26,10 @@ use TYPO3\CMS\Form\Domain\Model\FormElements\FormElementInterface;
  * @package Plan2net\FormDoubleOptIn\Form\Finishers
  * @author Wolfgang Klinger <wk@plan2.net>
  */
-class DoubleOptInFormFinisher extends EmailFinisher
+class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public const SIGNAL_AFTER_OPT_IN_CREATION = 'afterOptInCreation';
 
     protected const REQUIRED_OPTIONS = [
@@ -84,13 +90,18 @@ class DoubleOptInFormFinisher extends EmailFinisher
 
         try {
             $doubleOptIn = $this->createDoubleOptIn($options);
+            $this->dispatchSignal($doubleOptIn);
         } catch (Exception $e) {
-            throw new RuntimeException(
-                sprintf('Double opt-in record could not be created: %s', $e->getMessage()),
-                1579786748
+            return $this->handleError(
+                $e->getMessage(),
+                TranslationService::getInstance()
+                    ->translate('EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:internalError'),
+                [__CLASS__, __METHOD__, __LINE__]
             );
         }
-        $this->dispatchSignal($doubleOptIn);
+
+        $persistenceManager = $this->objectManager->get(PersistenceManager::class);
+        $persistenceManager->persistAll();
 
         $view->assign('confirmationHash', $doubleOptIn->getConfirmationHash());
         $view->assign('confirmationPid', (int)$options['confirmationPid']);
@@ -101,8 +112,15 @@ class DoubleOptInFormFinisher extends EmailFinisher
         }
         $recipientCount = $this->sendMailMessage($view->render(), $options);
         if ($recipientCount === 0) {
-            throw new RuntimeException('Mail message could not be delivered', 1579786734);
+            return $this->handleError(
+                sprintf('Unable to send E-Mail to "%s"', $options['recipientAddress']),
+                TranslationService::getInstance()
+                    ->translate('EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:unableToSendMail'),
+                [__CLASS__, __METHOD__, __LINE__]
+            );
         }
+
+        return null;
     }
 
     /**
@@ -118,9 +136,6 @@ class DoubleOptInFormFinisher extends EmailFinisher
         $doubleOptIn->setEmail($options['email']);
 
         $this->doubleOptInRepository->add($doubleOptIn);
-
-        $persistenceManager = $this->objectManager->get(PersistenceManager::class);
-        $persistenceManager->persistAll();
 
         return $doubleOptIn;
     }
@@ -141,7 +156,7 @@ class DoubleOptInFormFinisher extends EmailFinisher
                 $value = $value->getOriginalResource()->getCombinedIdentifier();
             } elseif (is_array($value)) {
                 $value = implode(',', $value);
-            } elseif ($value instanceof \DateTimeInterface) {
+            } elseif ($value instanceof DateTimeInterface) {
                 $format = $elementsConfiguration[$identifier]['dateFormat'] ?? 'U';
                 $value = $value->format($format);
             }
@@ -249,5 +264,19 @@ class DoubleOptInFormFinisher extends EmailFinisher
                 sprintf('Calling slot dispatcher afterOptInCreation failed with: %s', $e->getMessage())
             );
         }
+    }
+
+    /**
+     * @param string $error
+     * @param string $message
+     * @param array $context
+     * @return string
+     */
+    protected function handleError(string $error, string $message, array $context): string
+    {
+        $this->logger->error($error, $context);
+        $this->finisherContext->cancel();
+
+        return $message;
     }
 }

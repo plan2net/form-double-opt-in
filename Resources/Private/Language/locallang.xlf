@@ -42,6 +42,12 @@
             <trans-unit id="email.text">
                 <source>Thank you for signing up! Please confirm your E-Mail address by following the link below:</source>
             </trans-unit>
+            <trans-unit id="internalError">
+                <source>We are sorry, an internal error or incorrect configuration has occurred (details in the log file). Please contact the system administrator.</source>
+            </trans-unit>
+            <trans-unit id="unableToSendMail">
+                <source>We are sorry, we were not able to send the E-Mail. Please try again later.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
