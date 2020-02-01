@@ -34,7 +34,6 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
 
     protected const REQUIRED_OPTIONS = [
         'subject',
-        'email',
         'recipientAddress',
         'senderAddress',
         'confirmationPid'
@@ -133,7 +132,12 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         $doubleOptIn = $this->objectManager->get(FormDoubleOptIn::class);
         $doubleOptIn->setPid((int)$options['confirmationPid']);
         $doubleOptIn->setFormValues($this->getFormValues());
-        $doubleOptIn->setEmail($options['email']);
+        $doubleOptIn->setEmail($options['recipientAddress']);
+        $doubleOptIn->setReceiverInformation([
+            'confirmationReceiverAddress' => $options['confirmationReceiverAddress'] ?? '',
+            'confirmationReceiverName' => $options['confirmationReceiverName'] ?? '',
+            'confirmationSubject' => $options['confirmationSubject'] ?? ''
+        ]);
 
         $this->doubleOptInRepository->add($doubleOptIn);
 
@@ -224,7 +228,6 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         $options = [];
         foreach ([
                      'subject',
-                     'email',
                      'recipientAddress',
                      'recipientName',
                      'senderAddress',
@@ -233,6 +236,9 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
                      'carbonCopyAddress',
                      'blindCarbonCopyAddress',
                      'format',
+                     'confirmationSubject',
+                     'confirmationReceiverAddress',
+                     'confirmationReceiverName',
                      'confirmationPid'
                  ] as $key) {
             $option = $this->parseOption($key);

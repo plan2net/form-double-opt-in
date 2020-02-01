@@ -21,9 +21,6 @@
             <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date">
                 <source>Confirmation date (if confirmed)</source>
             </trans-unit>
-            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.form_values">
-                <source>Submitted form values</source>
-            </trans-unit>
             <trans-unit id="plugin.doubleoptin">
                 <source>Form double opt-in</source>
             </trans-unit>

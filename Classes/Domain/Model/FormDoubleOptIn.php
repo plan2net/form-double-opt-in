@@ -42,11 +42,18 @@ class FormDoubleOptIn extends AbstractEntity
     protected $confirmationDate;
 
     /**
-     * The original form values as encrypted json string
+     * The original form values as json string
      *
      * @var string
      */
     protected $formValues;
+
+    /**
+     * The original confirmation receiver information as json string
+     *
+     * @var string
+     */
+    protected $receiverInformation;
 
     /**
      * @throws Exception
@@ -151,7 +158,7 @@ class FormDoubleOptIn extends AbstractEntity
      */
     public function getFormValues(): array
     {
-        return json_decode($this->formValues, true);
+        return json_decode($this->formValues ?? '', true) ?? [];
     }
 
     /**
@@ -161,6 +168,25 @@ class FormDoubleOptIn extends AbstractEntity
     public function setFormValues(array $values): self
     {
         $this->formValues = json_encode($values);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReceiverInformation(): array
+    {
+        return json_decode($this->receiverInformation ?? '', true) ?? [];
+    }
+
+    /**
+     * @param array $values
+     * @return FormDoubleOptIn
+     */
+    public function setReceiverInformation(array $values): self
+    {
+        $this->receiverInformation = json_encode($values);
 
         return $this;
     }

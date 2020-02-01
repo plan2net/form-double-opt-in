@@ -74,10 +74,17 @@ return [
         ],
         'form_values' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.form_values',
+            'label' => '',
             'config' => [
                 'type' => 'passthrough'
             ]
         ],
+        'receiver_information' => [
+            'exclude' => 1,
+            'label' => '',
+            'config' => [
+                'type' => 'passthrough'
+            ]
+        ]
     ]
 ];

@@ -23,37 +23,33 @@ TYPO3:
                           10: 'TYPO3.CMS.Form.mixins.formElementMixins.BaseCollectionEditorsMixin'
                         100:
                           label: 'Double Opt-In'
-                        110:
-                          identifier: 'firstName'
-                          templateName: 'Inspector-TextEditor'
-                          label: 'First name'
-                          propertyPath: 'options.firstName'
-                          enableFormelementSelectionButton: true
-                          propertyValidators:
-                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
-                        120:
-                          identifier: 'lastName'
-                          templateName: 'Inspector-TextEditor'
-                          label: 'Last name'
-                          propertyPath: 'options.lastName'
-                          enableFormelementSelectionButton: true
-                          propertyValidators:
-                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
-                        130:
-                          identifier: 'email'
-                          templateName: 'Inspector-TextEditor'
-                          label: 'Email address'
-                          propertyPath: 'options.email'
-                          enableFormelementSelectionButton: true
-                          propertyValidators:
-                            10: 'FormElementIdentifierWithinCurlyBracesInclusive'
-                        160:
+                        200:
                           identifier: 'confirmationPid'
                           templateName: 'Inspector-TextEditor'
                           label: 'Confirmation page ID'
                           propertyPath: 'options.confirmationPid'
                           propertyValidators:
                             10: 'Integer'
+                        210:
+                          identifier: 'confirmationReceiverAddress'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Receiver E-Mail address for the confirmed subscription'
+                          propertyPath: 'options.confirmationReceiverAddress'
+                          enableFormelementSelectionButton: false
+                          propertyValidators:
+                            10: 'EmailAddress'
+                        220:
+                          identifier: 'confirmationReceiverName'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Receiver name for the confirmed subscription'
+                          propertyPath: 'options.confirmationReceiverName'
+                          enableFormelementSelectionButton: false
+                        230:
+                          identifier: 'confirmationSubject'
+                          templateName: 'Inspector-TextEditor'
+                          label: 'Subject for the confirmed subscription'
+                          propertyPath: 'options.confirmationSubject'
+                          enableFormelementSelectionButton: false
           finishersDefinition:
             DoubleOptIn:
               __inheritances:
@@ -68,10 +64,6 @@ TYPO3:
                 label: 'Double Opt-In'
                 predefinedDefaults:
                   options:
-                    firstName: ''
-                    lastName: ''
-                    email: ''
-                    confirmationPid: ''
                     subject: ''
                     recipientAddress: ''
                     recipientName: ''
@@ -84,22 +76,34 @@ TYPO3:
                     attachUploads: false
                     translation:
                       language: ''
+                    confirmationPid: ''
+                    confirmationReceiverAddress: ''
+                    confirmationReceiverName: ''
+                    confirmationSubject: ''
               FormEngine:
                 label: 'Double Opt-In'
                 elements:
-                  firstName:
-                    label: 'First name'
+                  subject:
+                    label: 'Double opt-in E-Mail subject'
                     config:
                       type: 'input'
-                  lastName:
-                    label: 'Last name'
-                    config:
-                      type: 'input'
-                  email:
-                    label: 'E-Mail address'
-                    config:
-                      type: 'input'
+                      eval: 'required'
                   confirmationPid:
                     label: 'Confirmation page ID'
                     config:
                       type: 'input'
+                      eval: 'required,int'
+                  confirmationReceiverAddress:
+                    label: 'Receiver E-Mail address for the confirmed subscription'
+                    config:
+                      type: 'input'
+                      eval: 'required,email'
+                  confirmationReceiverName:
+                    label: 'Receiver name for the confirmed subscription'
+                    config:
+                      type: 'input'
+                  confirmationSubject:
+                    label: 'Subject for the confirmed subscription'
+                    config:
+                      type: 'input'
+                      eval: 'required'

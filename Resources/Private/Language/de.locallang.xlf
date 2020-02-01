@@ -21,9 +21,6 @@
             <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date">
                 <target>Bestätigungsdatum (wenn bestätigt)</target>
             </trans-unit>
-            <trans-unit id="tx_formdoubleoptin_domain_model_formdoubleoptin.form_values">
-                <target>Übermittelte Formular-Daten</target>
-            </trans-unit>
             <trans-unit id="plugin.doubleoptin">
                 <target>Formular Double Opt-in</target>
             </trans-unit>
@@ -40,7 +37,7 @@
                 <target>Guten Tag</target>
             </trans-unit>
             <trans-unit id="email.text">
-                <target>Vielen Dank für Ihre Anmeldung! Bitte bestätigen Sie Ihre E-Mail Adresse, indem Sie dem unten angeführten Link folgen:</target>
+                <target>vielen Dank für Ihre Anmeldung! Bitte bestätigen Sie Ihre E-Mail Adresse, indem Sie dem unten angeführten Link folgen:</target>
             </trans-unit>
             <trans-unit id="internalError">
                 <target>Es tut uns leid, ein interner Fehler oder eine falsche Konfiguration ist aufgetreten (Details in der Protokolldatei). Bitte wenden Sie sich an den Systemadministrator.</target>
