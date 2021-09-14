@@ -74,8 +74,6 @@ TYPO3:
                     blindCarbonCopyAddress: ''
                     format: 'plaintext'
                     attachUploads: false
-                    translation:
-                      language: ''
                     confirmationPid: ''
                     confirmationReceiverAddress: ''
                     confirmationReceiverName: ''
