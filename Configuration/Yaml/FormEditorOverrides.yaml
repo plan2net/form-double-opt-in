@@ -29,7 +29,8 @@ TYPO3:
                           label: 'Confirmation page ID'
                           propertyPath: 'options.confirmationPid'
                           propertyValidators:
-                            10: 'Integer'
+                            10: Integer
+                            20: NotEmpty
                         210:
                           identifier: 'confirmationReceiverAddress'
                           templateName: 'Inspector-TextEditor'
@@ -37,19 +38,24 @@ TYPO3:
                           propertyPath: 'options.confirmationReceiverAddress'
                           enableFormelementSelectionButton: false
                           propertyValidators:
-                            10: 'EmailAddress'
+                            10: EmailAddress
+                            20: NotEmpty
                         220:
                           identifier: 'confirmationReceiverName'
                           templateName: 'Inspector-TextEditor'
                           label: 'Receiver name for the confirmed subscription'
                           propertyPath: 'options.confirmationReceiverName'
                           enableFormelementSelectionButton: false
+                          propertyValidators:
+                            10: NotEmpty
                         230:
                           identifier: 'confirmationSubject'
                           templateName: 'Inspector-TextEditor'
                           label: 'Subject for the confirmed subscription'
                           propertyPath: 'options.confirmationSubject'
                           enableFormelementSelectionButton: false
+                          propertyValidators:
+                            10: NotEmpty
           finishersDefinition:
             DoubleOptIn:
               __inheritances:
