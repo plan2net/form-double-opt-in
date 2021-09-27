@@ -23,7 +23,7 @@ TYPO3:
                           10: 'TYPO3.CMS.Form.mixins.formElementMixins.BaseCollectionEditorsMixin'
                         100:
                           label: 'Double Opt-In'
-                        200:
+                        5200:
                           identifier: 'confirmationPid'
                           templateName: 'Inspector-TextEditor'
                           label: 'Confirmation page ID'
@@ -31,7 +31,7 @@ TYPO3:
                           propertyValidators:
                             10: Integer
                             20: NotEmpty
-                        210:
+                        5210:
                           identifier: 'confirmationReceiverAddress'
                           templateName: 'Inspector-TextEditor'
                           label: 'Receiver E-Mail address for the confirmed subscription'
@@ -40,7 +40,7 @@ TYPO3:
                           propertyValidators:
                             10: EmailAddress
                             20: NotEmpty
-                        220:
+                        5220:
                           identifier: 'confirmationReceiverName'
                           templateName: 'Inspector-TextEditor'
                           label: 'Receiver name for the confirmed subscription'
@@ -48,7 +48,7 @@ TYPO3:
                           enableFormelementSelectionButton: false
                           propertyValidators:
                             10: NotEmpty
-                        230:
+                        5230:
                           identifier: 'confirmationSubject'
                           templateName: 'Inspector-TextEditor'
                           label: 'Subject for the confirmed subscription'
