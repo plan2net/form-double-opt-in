@@ -1,6 +1,6 @@
 # TYPO3 CMS form double opt-in
 
-for TYPO3 CMS >=9.5 and PHP >=7.2
+for TYPO3 CMS >=11.5 and PHP >=8.2
 
 ## Installation
 
@@ -13,43 +13,36 @@ composer require plan2net/form-double-opt-in
 Include the static TypoScript Template for the extension
 > Form double opt-in
 
-## Signals
+## Events
 
-The form finisher and the controller dispatch the following signals:
+We are using EventDispatcher (PSR-14 Events) according to https://docs.typo3.org/m/typo3/reference-coreapi/11.5/en-us/ApiOverview/Events/EventDispatcher/Index.html
 
-- afterOptInCreation
-- afterOptInConfirmation
+The form finisher and the controller dispatch the following events:
+
+- AfterOptInCreationEvent
+- AfterOptInConfirmationEvent
 
 each time with the double opt-in record as argument.
 
-Register your signal processing method in `ext_localconf.php` like
+### Fetching original form values
+
+Register your event listener in `Configuration/Services.yaml` like
 
 ```
-/** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
-$signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\SignalSlot\Dispatcher::class);
-$signalSlotDispatcher->connect(
-    \Plan2net\FormDoubleOptIn\Controller\DoubleOptInController::class,
-    \Plan2net\FormDoubleOptIn\Controller\DoubleOptInController::SIGNAL_AFTER_OPT_IN_CONFIRMATION,
-    \Vendor\YourExtension\Slots\DoubleOptInControllerSlot::class,
-    'afterOptInConfirmationSlot',
-    true
-);
+  Company\ExtensionName\EventListener\AfterOptInCreationEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'AfterOptInCreationEventListener'
+        event: Plan2net\FormDoubleOptIn\Event\AfterOptInCreationEvent
 ```
 
-## Fetching original form values
-
-In your signal processing method you can access the original form data (decrypted) through the given argument
+In your event listerner method you can access the original form data through the given argument
 
 ```
-use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
-class DoubleOptInControllerSlot 
-{
-…
-    public function afterOptInConfirmationSlot(FormDoubleOptIn $doubleOptIn): void
+use Plan2net\FormDoubleOptIn\Event\AfterOptInConfirmationEvent;
+    public function __invoke(AfterOptInConfirmationEvent $event): void
     {
-        $formValues = $doubleOptIn->getFormValues();
-…
+        $doubleOptInData = $event->getDoubleOptIn();
     }
-}
 ```
 

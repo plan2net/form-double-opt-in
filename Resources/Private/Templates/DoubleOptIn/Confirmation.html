@@ -4,17 +4,17 @@
 <f:if condition="{confirmed} && {alreadyConfirmed}">
     <f:then>
         <p>
-            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:alreadyConfirmed"/>
+            <f:translate key="alreadyConfirmed" extensionName="form_double_opt_in"/>
         </p>
     </f:then>
     <f:else if="{confirmed}">
         <p>
-            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:success"/>
+            <f:translate key="success" extensionName="form_double_opt_in"/>
         </p>
     </f:else>
     <f:else>
         <p>
-            <f:translate key="LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:failed"/>
+            <f:translate key="failed" extensionName="form_double_opt_in"/>
         </p>
     </f:else>
 </f:if>

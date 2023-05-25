@@ -1,17 +1,19 @@
 <?php
 
-defined('TYPO3_MODE') or die ('Access denied.');
+declare(strict_types=1);
 
-(static function () {
+defined('TYPO3') || exit('Access denied.');
+
+(static function (): void {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'Plan2net.FormDoubleOptIn',
+        'FormDoubleOptIn',
         'DoubleOptIn',
         [
-            'DoubleOptIn' => 'confirmation'
+            \Plan2net\FormDoubleOptIn\Controller\DoubleOptInController::class => 'confirmation'
         ],
         // Uncached actions
         [
-            'DoubleOptIn' => 'confirmation'
+            \Plan2net\FormDoubleOptIn\Controller\DoubleOptInController::class => 'confirmation'
         ]
     );
 

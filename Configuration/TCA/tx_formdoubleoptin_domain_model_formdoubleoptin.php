@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+$ll = 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:';
+
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin',
+        'title' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin',
         'label' => 'email',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
-        'dividers2tabs' => true,
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden'
         ],
         'searchFields' => 'email,confirmation_hash',
         'iconfile' => 'EXT:form_double_opt_in/Resources/Public/Icons/PluginDoubleOptIn.svg'
-    ],
-    'interface' => [
-        'showRecordFieldList' => 'email, mailing_date, confirmation_hash, confirmation_date, confirmed'
     ],
     'types' => [
         '1' => [
@@ -26,27 +26,28 @@ return [
     'columns' => [
         'email' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.email',
+            'label' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin.email',
             'config' => [
                 'type' => 'input',
-                'size' => '30',
+                'size' => 30,
                 'readOnly' => true
             ]
         ],
         'mailing_date' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.mailing_date',
+            'label' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin.mailing_date',
             'config' => [
                 'type' => 'input',
                 'size' => 20,
                 'eval' => 'datetime',
                 'checkbox' => false,
-                'readOnly' => true
+                'readOnly' => true,
+                'renderType' => 'inputDateTime'
             ]
         ],
         'confirmed' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.confirmed',
+            'label' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin.confirmed',
             'config' => [
                 'type' => 'check',
                 'readOnly' => 1
@@ -54,7 +55,7 @@ return [
         ],
         'confirmation_hash' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_hash',
+            'label' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_hash',
             'config' => [
                 'type' => 'input',
                 'size' => 16,
@@ -63,13 +64,14 @@ return [
         ],
         'confirmation_date' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date',
+            'label' => $ll . 'tx_formdoubleoptin_domain_model_formdoubleoptin.confirmation_date',
             'config' => [
                 'type' => 'input',
                 'size' => 20,
                 'eval' => 'datetime',
                 'checkbox' => false,
-                'readOnly' => true
+                'readOnly' => true,
+                'renderType' => 'inputDateTime'
             ]
         ],
         'form_values' => [

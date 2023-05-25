@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Plan2net\FormDoubleOptIn\:
+    resource: '../Classes/*'
+
+  Plan2net\FormDoubleOptIn\Form\Finishers\DoubleOptInFormFinisher:
+    arguments:
+      - '@Plan2net\FormDoubleOptIn\Domain\Repository\FormDoubleOptInRepository'
+      - '@TYPO3\CMS\Core\Localization\LanguageServiceFactory'

@@ -28,7 +28,7 @@
                 <source>The confirmation was sucessful.</source>
             </trans-unit>
             <trans-unit id="alreadyConfirmed">
-                <source>You have already carried out the confirmation sucessfully.</source>
+                <source>You have already carried out the confirmation successfully.</source>
             </trans-unit>
             <trans-unit id="failed">
                 <source>Sorry, the confirmation failed. Check the link again.</source>

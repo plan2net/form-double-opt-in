@@ -1,9 +1,15 @@
 {
   "name": "plan2net/form-double-opt-in",
   "description": "Form double opt-in",
+  "version": "2.0.0",
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "form_double_opt_in"
+    }
+  },
   "require": {
-    "php": ">=7.2",
-    "typo3/cms-form": "^9.5"
+    "php": ">=8.2",
+    "typo3/cms-form": "^11.5"
   },
   "type": "typo3-cms-extension",
   "autoload": {

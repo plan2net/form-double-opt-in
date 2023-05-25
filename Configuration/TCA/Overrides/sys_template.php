@@ -1,9 +1,13 @@
 <?php
 
-defined('TYPO3_MODE') or die('Access denied');
+declare(strict_types=1);
 
-(static function () {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+defined('TYPO3') || exit('Access denied');
+
+(static function (): void {
+    ExtensionManagementUtility::addStaticFile(
         'form_double_opt_in',
         'Configuration/TypoScript',
         'Form double opt-in'

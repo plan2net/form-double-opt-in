@@ -9,8 +9,7 @@ module.tx_form {
 plugin.tx_form {
     settings {
         yamlConfigurations {
-            # required for formEmailFinisherMixin
-            30 = EXT:form/Configuration/Yaml/FormEditorSetup.yaml
+            # required for formEmailFinisher
             505 = EXT:form_double_opt_in/Configuration/Yaml/FormEditorOverrides.yaml
         }
     }

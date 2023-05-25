@@ -1,86 +1,59 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Plan2net\FormDoubleOptIn\Domain\Model;
 
-use DateTime;
-use Exception;
-use Plan2net\FormDoubleOptIn\Helper\Encryption;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
- * Class FormDoubleOptIn
- *
- * @package Plan2net\FormDoubleOptIn\Domain\Model
- * @author Wolfgang Klinger <wk@plan2.net>
+ * Class FormDoubleOptIn.
  */
 class FormDoubleOptIn extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $email;
+    protected string $email;
+
+    protected \DateTime $mailingDate;
+
+    protected bool $confirmed = false;
+
+    protected string $confirmationHash = '';
+
+    protected ?\DateTime $confirmationDate = null;
 
     /**
-     * @var DateTime
-     */
-    protected $mailingDate;
-
-    /**
-     * @var bool
-     */
-    protected $confirmed = false;
-
-    /**
-     * @var string
-     */
-    protected $confirmationHash;
-
-    /**
-     * @var DateTime
-     */
-    protected $confirmationDate;
-
-    /**
-     * The original form values as json string
+     * The original form values as json string.
      *
      * @var string
+     *
+     * phpcs:disable SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $formValues;
 
     /**
-     * The original confirmation receiver information as json string
+     * The original confirmation receiver information as json string.
      *
      * @var string
      */
     protected $receiverInformation;
+    // phpcs:enable SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
-        if ($this->confirmationHash === null) {
-            // Results in a 32 character string
-            $this->confirmationHash = bin2hex(random_bytes(16));
-        }
-        if ($this->mailingDate === null) {
-            $this->mailingDate = new DateTime('now');
-        }
+        // Results in a 32 character string
+        $this->confirmationHash = bin2hex(random_bytes(16));
+
+        $this->mailingDate = new \DateTime('now');
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return FormDoubleOptIn
-     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -88,37 +61,23 @@ class FormDoubleOptIn extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getMailingDate(): DateTime
+    public function getMailingDate(): \DateTime
     {
         return $this->mailingDate;
     }
 
-    /**
-     * @param DateTime $mailingDate
-     * @return FormDoubleOptIn
-     */
-    public function setMailingDate(DateTime $mailingDate): self
+    public function setMailingDate(\DateTime $mailingDate): self
     {
         $this->mailingDate = $mailingDate;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isConfirmed(): bool
     {
         return $this->confirmed;
     }
 
-    /**
-     * @param bool $confirmed
-     * @return FormDoubleOptIn
-     */
     public function setConfirmed(bool $confirmed): self
     {
         $this->confirmed = $confirmed;
@@ -126,45 +85,29 @@ class FormDoubleOptIn extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getConfirmationDate(): DateTime
+    public function getConfirmationDate(): ?\DateTime
     {
         return $this->confirmationDate;
     }
 
-    /**
-     * @param DateTime $confirmationDate
-     * @return FormDoubleOptIn
-     */
-    public function setConfirmationDate(DateTime $confirmationDate): self
+    public function setConfirmationDate(?\DateTime $confirmationDate): self
     {
         $this->confirmationDate = $confirmationDate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getConfirmationHash(): string
     {
         return $this->confirmationHash;
     }
 
-    /**
-     * @return array
-     */
     public function getFormValues(): array
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return json_decode($this->formValues ?? '', true) ?? [];
     }
 
-    /**
-     * @param array $values
-     * @return FormDoubleOptIn
-     */
     public function setFormValues(array $values): self
     {
         $this->formValues = json_encode($values);
@@ -172,18 +115,12 @@ class FormDoubleOptIn extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getReceiverInformation(): array
     {
+        /** @psalm-suppress RedundantPropertyInitializationCheck */
         return json_decode($this->receiverInformation ?? '', true) ?? [];
     }
 
-    /**
-     * @param array $values
-     * @return FormDoubleOptIn
-     */
     public function setReceiverInformation(array $values): self
     {
         $this->receiverInformation = json_encode($values);
