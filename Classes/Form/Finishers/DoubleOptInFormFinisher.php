@@ -1,17 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Plan2net\FormDoubleOptIn\Form\Finishers;
 
-use DateTimeInterface;
-use Exception;
-use Plan2net\FormDoubleOptIn\Event\AfterDoubleOptInCreation;
 use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
 use Plan2net\FormDoubleOptIn\Domain\Repository\FormDoubleOptInRepository;
+use Plan2net\FormDoubleOptIn\Event\AfterDoubleOptInCreation;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use RuntimeException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core\Mail\FluidEmail;
@@ -20,7 +18,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Form\Domain\Finishers\EmailFinisher;
 use TYPO3\CMS\Form\Domain\Finishers\Exception\FinisherException;
@@ -30,7 +27,6 @@ use TYPO3\CMS\Form\Service\TranslationService;
 /**
  * Class DoubleOptInFormFinisher
  *
- * @package Plan2net\FormDoubleOptIn\Form\Finishers
  * @author Wolfgang Klinger <wk@plan2.net>
  */
 class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterface
@@ -53,9 +49,9 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
     }
 
     /**
-     * @inheritDoc
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws TransportExceptionInterface
+     * @throws FinisherException
      */
     protected function executeInternal()
     {
@@ -63,8 +59,11 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
 
         try {
             $doubleOptIn = $this->createDoubleOptIn($options);
-            $this->dispatchSignal($doubleOptIn);
-        } catch (Exception $e) {
+            $processedFormData = $this->eventDispatcher->dispatch(AfterDoubleOptInCreation::with($doubleOptIn->getFormValuesAsArray()));
+            if ($processedFormData) {
+                $doubleOptIn->setFormValuesAs($processedFormData->getFormValues());
+            }
+        } catch (\Throwable $e) {
             return $this->handleError(
                 $e->getMessage(),
                 LocalizationUtility::translate('internalError', 'form_double_opt_in'),
@@ -75,9 +74,9 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         $persistenceManager = GeneralUtility::makeInstance(PersistenceManager::class);
         $persistenceManager->persistAll();
 
-        $subject = (string)$this->parseOption('subject');
-        $recipientAddress = (string)$this->parseOption('recipientAddress');
-        $recipientName = (string)$this->parseOption('recipientName');
+        $subject = (string) $this->parseOption('subject');
+        $recipientAddress = (string) $this->parseOption('recipientAddress');
+        $recipientName = (string) $this->parseOption('recipientName');
         $recipients = [new Address($recipientAddress, $recipientName)];
         $senderAddress = $this->parseOption('senderAddress');
         $senderAddress = is_string($senderAddress) ? $senderAddress : '';
@@ -87,9 +86,9 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         $carbonCopyRecipients = $this->getRecipients('carbonCopyRecipients');
         $blindCarbonCopyRecipients = $this->getRecipients('blindCarbonCopyRecipients');
         $format = $this->parseOption('format');
-        $title = (string)$this->parseOption('title') ?: $subject;
+        $title = (string) $this->parseOption('title') ?: $subject;
 
-        if ($subject === '') {
+        if ('' === $subject) {
             throw new FinisherException('The option "subject" must be set for the EmailFinisher.', 1327060320);
         }
         if (empty($recipients)) {
@@ -99,11 +98,15 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
             throw new FinisherException('The option "senderAddress" must be set for the EmailFinisher.', 1327060210);
         }
 
+        /** @psalm-suppress InternalMethod */
         $formRuntime = $this->finisherContext->getFormRuntime();
 
         $translationService = GeneralUtility::makeInstance(TranslationService::class);
-        if (is_string($this->options['translation']['language'] ?? null) && $this->options['translation']['language'] !== '') {
+        /** @psalm-suppress InternalMethod */
+        if (is_string($this->options['translation']['language'] ?? null) && '' !== $this->options['translation']['language']) {
+            /** @psalm-suppress InternalMethod */
             $languageBackup = $translationService->getLanguage();
+            /** @psalm-suppress InternalMethod */
             $translationService->setLanguage($this->options['translation']['language']);
         }
 
@@ -112,10 +115,10 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
             ->from(new Address($senderAddress, $senderName))
             ->to(...$recipients)
             ->subject($subject)
-            ->format($format === self::FORMAT_PLAINTEXT ? FluidEmail::FORMAT_PLAIN : FluidEmail::FORMAT_BOTH)
+            ->format(self::FORMAT_PLAINTEXT === $format ? FluidEmail::FORMAT_PLAIN : FluidEmail::FORMAT_BOTH)
             ->assign('title', $title)
             ->assign('confirmationHash', $doubleOptIn->getConfirmationHash())
-            ->assign('confirmationPid', (int)$options['confirmationPid'])
+            ->assign('confirmationPid', (int) $options['confirmationPid'])
             ->assign('data', $this->getFormValues());
 
         if (!empty($replyToRecipients)) {
@@ -131,6 +134,7 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         }
 
         if (!empty($languageBackup)) {
+            /** @psalm-suppress InternalMethod */
             $translationService->setLanguage($languageBackup);
         }
 
@@ -138,7 +142,7 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         $temp->send($mail);
 
         $recipientCount = $temp->getSentMessage()?->getEnvelope()->getRecipients();
-        if ($recipientCount === 0) {
+        if (0 === $recipientCount) {
             return $this->handleError(
                 sprintf('Unable to send E-Mail to "%s"', $options['recipientAddress']),
                 LocalizationUtility::translate('unableToSendMail', 'form_double_opt_in'),
@@ -150,17 +154,15 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
     }
 
     /**
-     * @param array $options
-     * @return FormDoubleOptIn
-     * @throws IllegalObjectTypeException
+     * @throws IllegalObjectTypeException|\JsonException
      */
     protected function createDoubleOptIn(array $options): FormDoubleOptIn
     {
         $doubleOptIn = GeneralUtility::makeInstance(FormDoubleOptIn::class);
-        $doubleOptIn->setPid((int)$options['confirmationPid']);
-        $doubleOptIn->setFormValues($this->getFormValues());
+        $doubleOptIn->setPid((int) $options['confirmationPid']);
+        $doubleOptIn->setFormValuesAs($this->getFormValues());
         $doubleOptIn->setEmail($options['recipientAddress']);
-        $doubleOptIn->setReceiverInformation([
+        $doubleOptIn->setReceiverInformationAs([
             'confirmationReceiverAddress' => $options['confirmationReceiverAddress'] ?? '',
             'confirmationReceiverName' => $options['confirmationReceiverName'] ?? '',
             'confirmationSubject' => $options['confirmationSubject'] ?? ''
@@ -171,12 +173,10 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         return $doubleOptIn;
     }
 
-    /**
-     * @return array
-     */
     protected function getFormValues(): array
     {
         $values = [];
+        /** @psalm-suppress InternalMethod */
         foreach ($this->finisherContext->getFormValues() as $identifier => $value) {
             $element = $this->getElementByIdentifier($identifier);
             if (!$element instanceof FormElementInterface) {
@@ -187,12 +187,11 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
                 $value = $value->getOriginalResource()->getCombinedIdentifier();
             } elseif (is_array($value)) {
                 $value = implode(',', $value);
-            } elseif ($value instanceof DateTimeInterface) {
-                $format = $elementsConfiguration[$identifier]['dateFormat'] ?? 'U';
-                $value = $value->format($format);
+            } elseif ($value instanceof \DateTimeInterface) {
+                $value = $value->format('U');
             }
 
-            if ($value !== null) {
+            if (null !== $value) {
                 $values[$identifier] = $value;
             }
         }
@@ -202,12 +201,10 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
 
     /**
      * Returns a form element object for a given identifier.
-     *
-     * @param string $elementIdentifier
-     * @return FormElementInterface|null
      */
     protected function getElementByIdentifier(string $elementIdentifier): ?FormElementInterface
     {
+        /** @psalm-suppress InternalMethod */
         return $this
             ->finisherContext
             ->getFormRuntime()
@@ -216,32 +213,29 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
     }
 
     /**
-     * @return array
      * @throws FinisherException
      */
     protected function parseOptions(): array
     {
         $options = [];
         foreach ([
-                     'subject',
-                     'recipientAddress',
-                     'recipientName',
-                     'senderAddress',
-                     'senderName',
-                     'replyToAddress',
-                     'carbonCopyAddress',
-                     'blindCarbonCopyAddress',
-                     'format',
-                     'confirmationSubject',
-                     'confirmationReceiverAddress',
-                     'confirmationReceiverName',
-                     'confirmationPid'
-                 ] as $key) {
+            'subject',
+            'recipientAddress',
+            'recipientName',
+            'senderAddress',
+            'senderName',
+            'replyToAddress',
+            'carbonCopyAddress',
+            'blindCarbonCopyAddress',
+            'format',
+            'confirmationSubject',
+            'confirmationReceiverAddress',
+            'confirmationReceiverName',
+            'confirmationPid'
+        ] as $key) {
             $option = $this->parseOption($key);
             if (empty($option) && in_array($key, self::REQUIRED_OPTIONS, true)) {
-                throw new FinisherException(
-                    sprintf('The option "%s" must be set for the DoubleOptInFinisher.', $key)
-                );
+                throw new FinisherException(sprintf('The option "%s" must be set for the DoubleOptInFinisher.', $key));
             }
             $options[$key] = $option;
         }
@@ -249,30 +243,10 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
         return $options;
     }
 
-    /**
-     * @param FormDoubleOptIn $doubleOptIn
-     * @throws RuntimeException
-     */
-    protected function dispatchSignal(FormDoubleOptIn $doubleOptIn): void
-    {
-        try {
-            $this->eventDispatcher->dispatch(AfterDoubleOptInCreation::with($doubleOptIn));
-        } catch (Exception $e) {
-            throw new RuntimeException(
-                sprintf('Calling slot dispatcher afterOptInCreation failed with: %s', $e->getMessage())
-            );
-        }
-    }
-
-    /**
-     * @param string $error
-     * @param string $message
-     * @param array $context
-     * @return string
-     */
     protected function handleError(string $error, string $message, array $context): string
     {
         $this->logger->error($error, $context);
+        /** @psalm-suppress InternalMethod */
         $this->finisherContext->cancel();
 
         return $message;

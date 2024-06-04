@@ -1,21 +1,25 @@
 <?php
 
-defined('TYPO3') or defined('TYPO3_MODE') or die ('Access denied.');
+use Plan2net\FormDoubleOptIn\Controller\DoubleOptInController;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
+defined('TYPO3') or defined('TYPO3_MODE') or exit('Access denied.');
 
 (static function () {
-    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'Plan2net.FormDoubleOptIn',
+    ExtensionUtility::configurePlugin(
+        'FormDoubleOptIn',
         'DoubleOptIn',
         [
-            'DoubleOptIn' => 'confirmation'
+            DoubleOptInController::class => 'confirmation'
         ],
         // Uncached actions
         [
-            'DoubleOptIn' => 'confirmation'
+            DoubleOptInController::class => 'confirmation'
         ]
     );
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
+    ExtensionManagementUtility::addPageTSConfig(
         'mod {
                 wizards.newContentElement.wizardItems.plugins {
                     elements {

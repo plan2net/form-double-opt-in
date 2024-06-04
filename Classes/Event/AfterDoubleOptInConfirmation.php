@@ -4,19 +4,29 @@ declare(strict_types=1);
 
 namespace Plan2net\FormDoubleOptIn\Event;
 
-use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
-
-class AfterDoubleOptInConfirmation
+final readonly class AfterDoubleOptInConfirmation
 {
     public function __construct(
-        readonly FormDoubleOptIn $formDoubleOptIn
+        private array $formValues,
+        private array $confirmationReceiverInformation
     ) {
     }
 
-    public static function with(FormDoubleOptIn $formDoubleOptIn): self
+    public static function with(array $formValues, array $confirmationReceiverInformation): self
     {
         return new self(
-            $formDoubleOptIn
+            $formValues,
+            $confirmationReceiverInformation
         );
+    }
+
+    public function getFormValues(): array
+    {
+        return $this->formValues;
+    }
+
+    public function getConfirmationReceiverInformation(): array
+    {
+        return $this->confirmationReceiverInformation;
     }
 }

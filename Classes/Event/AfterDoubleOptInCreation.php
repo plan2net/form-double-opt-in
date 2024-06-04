@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace Plan2net\FormDoubleOptIn\Event;
 
-use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
-
-class AfterDoubleOptInCreation
+final class AfterDoubleOptInCreation
 {
     public function __construct(
-        readonly FormDoubleOptIn $formDoubleOptIn
+        private array $formValues
     ) {
     }
 
-    public static function with(FormDoubleOptIn $formDoubleOptIn): self
+    public static function with(array $formValues): self
     {
         return new self(
-            $formDoubleOptIn
+            $formValues
         );
     }
 
+    public function getFormValues(): array
+    {
+        return $this->formValues;
+    }
 
+    public function setFormValues(array $formValues): void
+    {
+        $this->formValues = $formValues;
+    }
 }
