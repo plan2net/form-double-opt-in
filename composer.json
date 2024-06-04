@@ -3,12 +3,18 @@
   "description": "Form double opt-in",
   "require": {
     "php": ">=7.2",
-    "typo3/cms-form": "^9.5"
+    "typo3/cms-form": "^9.5 || ^10.4 || ^11.5 || ^12.4",
+    "friendsoftypo3/fontawesome-provider": "^1.0"
   },
   "type": "typo3-cms-extension",
   "autoload": {
     "psr-4": {
       "Plan2net\\FormDoubleOptIn\\": "Classes"
+    }
+  },
+  "extra" : {
+    "typo3/cms" : {
+      "extension-key" : "form_double_opt_in"
     }
   }
 }

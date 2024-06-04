@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die('Access denied');
+defined('TYPO3') or defined('TYPO3_MODE') or die('Access denied');
 
 (static function () {
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile(

@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die ('Access denied.');
+defined('TYPO3') or defined('TYPO3_MODE') or die ('Access denied.');
 
 (static function () {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
@@ -13,15 +13,6 @@ defined('TYPO3_MODE') or die ('Access denied.');
         [
             'DoubleOptIn' => 'confirmation'
         ]
-    );
-
-    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-        \TYPO3\CMS\Core\Imaging\IconRegistry::class
-    );
-    $iconRegistry->registerIcon(
-        'plugin-doubleoptin',
-        \TYPO3\CMS\Core\Imaging\IconProvider\FontawesomeIconProvider::class,
-        ['name' => 'wpforms']
     );
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(

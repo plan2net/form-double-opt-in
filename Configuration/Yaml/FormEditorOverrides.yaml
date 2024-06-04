@@ -15,12 +15,8 @@ TYPO3:
                 propertyCollections:
                   finishers:
                     250:
-                      __inheritances:
-                        10: 'TYPO3.CMS.Form.mixins.formElementMixins.formEmailFinisherMixin'
                       identifier: 'DoubleOptIn'
                       editors:
-                        __inheritances:
-                          10: 'TYPO3.CMS.Form.mixins.formElementMixins.BaseCollectionEditorsMixin'
                         100:
                           label: 'Double Opt-In'
                         5200:
@@ -58,8 +54,6 @@ TYPO3:
                             10: NotEmpty
           finishersDefinition:
             DoubleOptIn:
-              __inheritances:
-                10: 'TYPO3.CMS.Form.mixins.finishersEmailMixin'
               implementationClassName: 'Plan2net\FormDoubleOptIn\Form\Finishers\DoubleOptInFormFinisher'
               options:
                 templateName: DoubleOptIn

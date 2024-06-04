@@ -1,6 +1,6 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = [
+$EM_CONF['form_double_opt_in'] = [
     'title' => 'Form double opt-in',
     'description' => 'Adds a double opt-in finisher to forms',
     'category' => 'fe',
@@ -12,7 +12,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '1.2.1',
     'constraints' => [
         'depends' => [
-            'form' => '9.5.9-9.5.99'
+            'form' => '9.5.9-12.4.99'
         ]
     ]
 ];

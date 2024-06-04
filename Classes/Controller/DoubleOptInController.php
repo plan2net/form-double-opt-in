@@ -5,15 +5,17 @@ namespace Plan2net\FormDoubleOptIn\Controller;
 
 use DateTime;
 use Exception;
+use Plan2net\FormDoubleOptIn\Event\AfterDoubleOptInConfirmation;
 use Plan2net\FormDoubleOptIn\Domain\Model\FormDoubleOptIn;
 use Plan2net\FormDoubleOptIn\Domain\Repository\FormDoubleOptInRepository;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use RuntimeException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Exception\NoSuchArgumentException;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
-use TYPO3\CMS\Form\Service\TranslationService;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
@@ -26,19 +28,9 @@ class DoubleOptInController extends ActionController implements LoggerAwareInter
 {
     use LoggerAwareTrait;
 
-    public const SIGNAL_AFTER_OPT_IN_CONFIRMATION = 'afterOptInConfirmation';
-
-    /**
-     * @var FormDoubleOptInRepository
-     */
-    protected $doubleOptInRepository;
-
-    /**
-     * @param FormDoubleOptInRepository $doubleOptInRepository
-     */
-    public function injectFormDoubleOptInRepository(FormDoubleOptInRepository $doubleOptInRepository): void
-    {
-        $this->doubleOptInRepository = $doubleOptInRepository;
+    public function __construct(
+        private FormDoubleOptInRepository $doubleOptInRepository,
+    ) {
     }
 
     /**
@@ -54,9 +46,9 @@ class DoubleOptInController extends ActionController implements LoggerAwareInter
         } catch (NoSuchArgumentException $e) {
         }
         if ($hash) {
-            $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+            $querySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
             // Double opt-in records are always stored on the confirmation page
-            $querySettings->setStoragePageIds([(int)self::getTypoScriptFrontendController()->id]);
+            $querySettings->setStoragePageIds([self::getTypoScriptFrontendController()->id]);
             $this->doubleOptInRepository->setDefaultQuerySettings($querySettings);
 
             /** @var FormDoubleOptIn $doubleOptIn */
@@ -79,8 +71,7 @@ class DoubleOptInController extends ActionController implements LoggerAwareInter
 
                     $this->view->assign('error', $this->handleError(
                         $e->getMessage(),
-                        TranslationService::getInstance()
-                            ->translate('EXT:form_double_opt_in/Resources/Private/Language/locallang.xlf:internalError'),
+                        LocalizationUtility::translate('internalError', 'form_double_opt_in'),
                         [__CLASS__, __METHOD__, __LINE__]
                     ));
                 }
@@ -114,11 +105,7 @@ class DoubleOptInController extends ActionController implements LoggerAwareInter
     protected function dispatchSignal(FormDoubleOptIn $doubleOptIn): void
     {
         try {
-            $this->signalSlotDispatcher->dispatch(
-                __CLASS__,
-                self::SIGNAL_AFTER_OPT_IN_CONFIRMATION,
-                [$doubleOptIn]
-            );
+            $this->eventDispatcher->dispatch(AfterDoubleOptInConfirmation::with($doubleOptIn));
         } catch (Exception $e) {
             throw new RuntimeException(
                 sprintf('Calling slot dispatcher afterOptInConfirmation failed with: %s', $e->getMessage())
