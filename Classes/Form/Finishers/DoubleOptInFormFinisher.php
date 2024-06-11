@@ -36,7 +36,6 @@ class DoubleOptInFormFinisher extends EmailFinisher implements LoggerAwareInterf
     protected const FORMAT_PLAINTEXT = 'plaintext';
 
     protected const REQUIRED_OPTIONS = [
-        'subject',
         'recipientAddress',
         'senderAddress',
         'confirmationPid'

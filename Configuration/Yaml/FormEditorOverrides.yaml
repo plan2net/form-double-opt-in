@@ -8,50 +8,117 @@ TYPO3:
               formEditor:
                 editors:
                   900:
+                    # Extend finisher drop down
                     selectOptions:
                       250:
-                        value: 'DoubleOptIn'
+                        value: DoubleOptIn
                         label: 'Double Opt-In'
                 propertyCollections:
                   finishers:
                     250:
+                      # Custom finisher:
                       identifier: 'DoubleOptIn'
                       editors:
                         100:
+                          identifier: header
                           label: 'Double Opt-In'
+                          templateName: Inspector-CollectionElementHeaderEditor
+                        # Copy from core email finisher (adapted):
+                        491:
+                          identifier: recipientAddress
+                          templateName: Inspector-TextEditor
+                          label: Recipient E-Mail address
+                          propertyPath: options.recipientAddress
+                          enableFormelementSelectionButton: false
+                          propertyValidators:
+                            20: NotEmpty
+                        492:
+                          identifier: recipientName
+                          templateName: Inspector-TextEditor
+                          label: Recipient name
+                          propertyPath: options.recipientName
+                          enableFormelementSelectionButton: false
+                          propertyValidators:
+                            20: NotEmpty
+                        500:
+                          identifier: senderAddress
+                          templateName: Inspector-TextEditor
+                          label: formEditor.elements.Form.finisher.EmailToSender.editor.senderAddress.label
+                          propertyPath: options.senderAddress
+                          enableFormelementSelectionButton: false
+                          propertyValidators:
+                            10: NaiveEmail
+                            20: NotEmpty
+                          fieldExplanationText: formEditor.elements.Form.finisher.EmailToSender.editor.senderAddress.fieldExplanationText
+                        490:
+                          identifier: subject
+                          templateName: Inspector-TextEditor
+                          label: formEditor.elements.Form.finisher.EmailToSender.editor.subject.label
+                          propertyPath: options.subject
+                          enableFormelementSelectionButton: true
+                        600:
+                          identifier: senderName
+                          templateName: Inspector-TextEditor
+                          label: formEditor.elements.Form.finisher.EmailToSender.editor.senderName.label
+                          propertyPath: options.senderName
+                          enableFormelementSelectionButton: false
+                          fieldExplanationText: formEditor.elements.Form.finisher.EmailToSender.editor.senderName.fieldExplanationText
+
+                        1050:
+                          identifier: format
+                          templateName: Inspector-SingleSelectEditor
+                          label: Format
+                          propertyPath: options.format
+                          selectOptions:
+                            10:
+                              value: 'plaintext'
+                              label: 'Plaintext'
+                            20:
+                              value: 'html'
+                              label: 'HTML'
+                        1100:
+                          identifier: attachUploads
+                          templateName: Inspector-CheckboxEditor
+                          label: formEditor.elements.Form.finisher.EmailToSender.editor.attachUploads.label
+                          propertyPath: options.attachUploads
+                        # Custom fields:
                         5200:
-                          identifier: 'confirmationPid'
+                          identifier: confirmationPid
                           templateName: 'Inspector-TextEditor'
                           label: 'Confirmation page ID'
                           propertyPath: 'options.confirmationPid'
+                          enableFormelementSelectionButton: false
                           propertyValidators:
                             10: Integer
                             20: NotEmpty
                         5210:
-                          identifier: 'confirmationReceiverAddress'
+                          identifier: confirmationReceiverAddress
                           templateName: 'Inspector-TextEditor'
                           label: 'Receiver E-Mail address for the confirmed subscription'
                           propertyPath: 'options.confirmationReceiverAddress'
-                          enableFormelementSelectionButton: false
+                          enableFormelementSelectionButton: true
                           propertyValidators:
-                            10: EmailAddress
-                            20: NotEmpty
+                            10: NotEmpty
+                            20: FormElementIdentifierWithinCurlyBracesInclusive
+
                         5220:
-                          identifier: 'confirmationReceiverName'
+                          identifier: confirmationReceiverName
                           templateName: 'Inspector-TextEditor'
                           label: 'Receiver name for the confirmed subscription'
                           propertyPath: 'options.confirmationReceiverName'
-                          enableFormelementSelectionButton: false
-                          propertyValidators:
-                            10: NotEmpty
+                          enableFormelementSelectionButton: true
                         5230:
-                          identifier: 'confirmationSubject'
+                          identifier: confirmationSubject
                           templateName: 'Inspector-TextEditor'
                           label: 'Subject for the confirmed subscription'
                           propertyPath: 'options.confirmationSubject'
                           enableFormelementSelectionButton: false
                           propertyValidators:
                             10: NotEmpty
+                        9999:
+                          # Add remove button:
+                          identifier: removeButton
+                          templateName: Inspector-RemoveElementEditor
           finishersDefinition:
             DoubleOptIn:
               implementationClassName: 'Plan2net\FormDoubleOptIn\Form\Finishers\DoubleOptInFormFinisher'
@@ -60,29 +127,36 @@ TYPO3:
                 templateRootPaths:
                   10: 'EXT:form_double_opt_in/Resources/Private/Templates'
               formEditor:
-                iconIdentifier: 't3-form-icon-finisher'
+                iconIdentifier: form-finisher
                 label: 'Double Opt-In'
                 predefinedDefaults:
                   options:
-                    subject: ''
-                    recipientAddress: ''
-                    recipientName: ''
                     senderAddress: ''
+                    subject: ''
                     senderName: ''
-                    replyToAddress: ''
-                    carbonCopyAddress: ''
-                    blindCarbonCopyAddress: ''
                     format: 'plaintext'
                     attachUploads: false
                     confirmationPid: ''
                     confirmationReceiverAddress: ''
                     confirmationReceiverName: ''
                     confirmationSubject: ''
+                    addHtmlPart: ''
               FormEngine:
+                # For form CE in BE: which settings of finisher may user override:
                 label: 'Double Opt-In'
                 elements:
                   subject:
-                    label: 'Double opt-in E-Mail subject'
+                    label: 'Subject'
+                    config:
+                      type: 'input'
+                      eval: 'required'
+                  senderAddress:
+                    label: 'Sender e-mail address'
+                    config:
+                      type: 'input'
+                      eval: 'required,email'
+                  senderName:
+                    label: 'Sender name'
                     config:
                       type: 'input'
                       eval: 'required'
@@ -91,15 +165,6 @@ TYPO3:
                     config:
                       type: 'input'
                       eval: 'required,int'
-                  confirmationReceiverAddress:
-                    label: 'Receiver E-Mail address for the confirmed subscription'
-                    config:
-                      type: 'input'
-                      eval: 'required,email'
-                  confirmationReceiverName:
-                    label: 'Receiver name for the confirmed subscription'
-                    config:
-                      type: 'input'
                   confirmationSubject:
                     label: 'Subject for the confirmed subscription'
                     config:
