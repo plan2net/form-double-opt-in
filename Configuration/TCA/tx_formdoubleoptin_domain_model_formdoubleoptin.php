@@ -15,9 +15,6 @@ return [
         'searchFields' => 'email,confirmation_hash',
         'iconfile' => 'EXT:form_double_opt_in/Resources/Public/Icons/PluginDoubleOptIn.svg'
     ],
-    'interface' => [
-        'showRecordFieldList' => 'email, mailing_date, confirmation_hash, confirmation_date, confirmed'
-    ],
     'types' => [
         '1' => [
             'showitem' => 'email, mailing_date, confirmation_hash, confirmation_date, confirmed'
