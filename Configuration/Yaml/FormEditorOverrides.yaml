@@ -93,14 +93,13 @@ TYPO3:
                             20: NotEmpty
                         5210:
                           identifier: confirmationReceiverAddress
-                          templateName: 'Inspector-TextEditor'
+                          templateName: Inspector-TextEditor
                           label: 'Receiver E-Mail address for the confirmed subscription'
-                          propertyPath: 'options.confirmationReceiverAddress'
+                          propertyPath: options.confirmationReceiverAddress
                           enableFormelementSelectionButton: true
                           propertyValidators:
-                            10: NotEmpty
-                            20: FormElementIdentifierWithinCurlyBracesInclusive
-
+                            10: NaiveEmail
+                            20: NotEmpty
                         5220:
                           identifier: confirmationReceiverName
                           templateName: 'Inspector-TextEditor'
@@ -165,6 +164,15 @@ TYPO3:
                     config:
                       type: 'input'
                       eval: 'required,int'
+                  confirmationReceiverAddress:
+                    label: 'Confirmation recipient e-mail address'
+                    config:
+                      type: 'input'
+                      eval: 'required'
+                  confirmationReceiverName:
+                    label: 'Confirmation recipient name'
+                    config:
+                      type: 'input'
                   confirmationSubject:
                     label: 'Subject for the confirmed subscription'
                     config:
